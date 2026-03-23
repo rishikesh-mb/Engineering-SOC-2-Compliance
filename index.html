@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mindbowser Inc – Detailed Security Roadmap</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=JetBrains+Mono&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg-page: #fafafa;
+      --bg-slide: #ffffff;
+      --text-bold: #1c1917;
+      --text-body: #44403c;
+      --accent-amber: #f59e0b;
+      --accent-soft: #fffbeb;
+      --danger: #ef4444;
+      --success: #10b981;
+      --border: #e7e5e4;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: var(--bg-page);
+      color: var(--text-body);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    header {
+      background: var(--bg-slide);
+      height: 70px;
+      padding: 0 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 2px solid var(--border);
+    }
+
+    #deck {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .slide {
+      display: none;
+      width: 100%;
+      max-width: 1000px;
+      /* Slightly reduced max-width for text-only focus */
+      height: 600px;
+      background: var(--bg-slide);
+      border-radius: 24px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.05);
+      border: 1px solid var(--border);
+      padding: 60px;
+      /* Increased padding */
+      animation: slideIn 0.3s ease;
+    }
+
+    /* Updated layout for single column text */
+    .slide.active {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* New container for centered text content */
+    .slide-content {
+      width: 100%;
+      max-width: 800px;
+      /* Ensures lines don't get too long to read */
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    h1 {
+      font-size: 3.2rem;
+      font-weight: 800;
+      color: var(--text-bold);
+      margin-bottom: 25px;
+    }
+
+    h2 {
+      font-size: 1.8rem;
+      color: var(--text-bold);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    h2 span {
+      color: var(--accent-amber);
+      font-family: 'JetBrains Mono';
+      font-size: 1.1rem;
+      border: 2px solid var(--accent-amber);
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+
+    ul {
+      list-style: none;
+      margin-bottom: 15px;
+    }
+
+    li {
+      margin-bottom: 10px;
+      font-size: 1.1rem;
+      line-height: 1.5;
+      padding-left: 25px;
+      position: relative;
+    }
+
+    li::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: var(--accent-amber);
+      font-weight: 900;
+      font-size: 1.2rem;
+    }
+
+    .example-box {
+      background: var(--accent-soft);
+      border-left: 4px solid var(--accent-amber);
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 20px;
+      width: 100%;
+    }
+
+    .example-label {
+      font-family: 'JetBrains Mono';
+      font-weight: 800;
+      font-size: 0.75rem;
+      color: var(--accent-amber);
+      text-transform: uppercase;
+      margin-bottom: 5px;
+      display: block;
+    }
+
+    .example-text {
+      font-size: 1rem;
+      font-style: italic;
+      color: var(--text-bold);
+    }
+
+    .alert-tag {
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      margin-top: 15px;
+      font-weight: 700;
+      width: 100%;
+    }
+
+    .danger {
+      background: #fef2f2;
+      color: #991b1b;
+      border-left: 4px solid var(--danger);
+    }
+
+    .success {
+      background: #f0fdf4;
+      color: #166534;
+      border-left: 4px solid var(--success);
+    }
+
+    footer {
+      height: 80px;
+      background: var(--bg-slide);
+      padding: 0 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid var(--border);
+    }
+
+    .btn {
+      background: var(--text-bold);
+      color: white;
+      border: none;
+      padding: 10px 25px;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn:hover:not(:disabled) {
+      background: var(--accent-amber);
+    }
+
+    .btn:disabled {
+      opacity: 0.2;
+    }
+
+    .progress-rail {
+      flex: 0.4;
+      height: 4px;
+      background: var(--border);
+      border-radius: 10px;
+    }
+
+    #progress-fill {
+      height: 100%;
+      background: var(--accent-amber);
+      width: 0%;
+      transition: width 0.3s;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <img src="./logo-colour.png" alt="MB" width="120" />
+    <div style="font-family: 'JetBrains Mono'; font-size: 0.75rem; font-weight: 800; color: var(--accent-amber);">
+      SECURITY MODULE 2025</div>
+  </header>
+
+  <div id="deck">
+    <div class="slide active">
+      <div class="slide-content">
+        <h1>Deep Dive:<br>Security Standards</h1>
+        <p style="font-size: 1.2rem;">A granular guide to SOC 2 Compliance and Data Safety at Mindbowser Inc.</p>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-content">
+        <h2><span>01</span> Identity: SSO</h2>
+        <ul>
+          <li>Use Single Sign-On for all company tools.</li>
+          <li>Centralized access prevents rogue accounts.</li>
+        </ul>
+        <div class="example-box">
+          <span class="example-label">Practical Example</span>
+          <p class="example-text">Always click "Login with Google/Okta" using your @mindbowser.com email instead of
+            creating a separate password for tools like Jira or HROne.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-content">
+        <h2><span>02</span> Identity: MFA</h2>
+        <ul>
+          <li>Multi-Factor Authentication is mandatory.</li>
+          <li>Protects against compromised passwords.</li>
+        </ul>
+        <div class="alert-tag danger">Never share your MFA code/OTP with anyone.</div>
+        <div class="example-box">
+          <span class="example-label">Practical Example</span>
+          <p class="example-text">If you receive an unexpected Duo/Google Authenticator prompt while not logging in,
+            click 'Deny' and report it immediately.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-content">
+        <h2><span>03</span> Access Management</h2>
+        <ul>
+          <li>Request only the access you need for your role.</li>
+          <li>Revoke access immediately when rolling off.</li>
+        </ul>
+        <div class="example-box">
+          <span class="example-label">Practical Example</span>
+          <p class="example-text">Moving from Project A to Project B? Send a ticket to IT to remove your Project A
+            database permissions.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-content">
+        <h2><span>04</span> Endpoint Security</h2>
+        <ul>
+          <li>Company devices must have Antivirus enabled.</li>
+          <li>Software auto-updates must never be blocked.</li>
+        </ul>
+        <div class="alert-tag success">Compliance check: Ensure Disk Encryption is ON.</div>
+        <div class="example-box">
+          <span class="example-label">Practical Example</span>
+          <p class="example-text">If your Mac prompts for a 'Security Update', install it during your lunch break rather
+            than clicking 'Remind me tomorrow'.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-content">
+        <h2><span>05</span> Physical Security</h2>
+        <ul>
+          <li>Auto-screen lock is set to 15 minutes.</li>
+          <li>Manually lock when leaving your desk.</li>
+        </ul>
+        <div class="example-box">
+          <span class="example-label">Practical Example</span>
+          <p class="example-text">Walking to the office kitchen for coffee? Press 'Win+L' or 'Cmd+Ctrl+Q' before
+            standing up.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-content">
+        <h2><span>06</span> Secure Dev: PRs</h2>
+        <ul>
+          <li>No code reaches production without peer review.</li>
+          <li>Reviewers must check for logic & security.</li>
+        </ul>
+        <div class="example-box">
+          <span class="example-label">Practical Example</span>
+          <p class="example-text">In a GitHub PR review, check if the developer added input validation to a new API
+            endpoint before approving.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-content">
+        <h2><span>07</span> Secrets Management</h2>
+        <ul>
+          <li>No hard-coded secrets in codebases.</li>
+          <li>Use Secret Managers (Vault/AWS Secrets).</li>
+        </ul>
+        <div class="alert-tag danger">Never commit .env files to Git.</div>
+        <div class="example-box">
+          <span class="example-label">Practical Example</span>
+          <p class="example-text">Store your Stripe API Key in AWS Secrets Manager and fetch it at runtime using an IAM
+            role.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-content">
+        <h2><span>08</span> Env Isolation</h2>
+        <ul>
+          <li>Dev, Stage, and Prod must be strictly isolated.</li>
+          <li>Credentials must differ across environments.</li>
+        </ul>
+        <div class="example-box">
+          <span class="example-label">Practical Example</span>
+          <p class="example-text">Your local 'localhost' DB password should never be the same as the Production RDS
+            password.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-content">
+        <h2><span>09</span> Production Access</h2>
+        <ul>
+          <li>Access granted only on 'Need to Know' basis.</li>
+          <li>All Prod access requires a valid Ticket ID.</li>
+        </ul>
+        <div class="alert-tag success">Mandatory: SSO + MFA for all Prod logins.</div>
+        <div class="example-box">
+          <span class="example-label">Practical Example</span>
+          <p class="example-text">Logging into the AWS Console? Enter the Jira Ticket ID (e.g., MB-102) in the 'Reason'
+            field of your access request.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-content">
+        <h2><span>10</span> Change Management</h2>
+        <ul>
+          <li>All Prod changes must be documented.</li>
+          <li>Include Scope, Risk, and Rollback plan.</li>
+        </ul>
+        <div class="example-box">
+          <span class="example-label">Practical Example</span>
+          <p class="example-text">Before running a DB migration, document the exact SQL command to 'undo' the change if
+            the deployment fails.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-content">
+        <h2><span>11</span> Logging & Monitoring</h2>
+        <ul>
+          <li>Log auth attempts, permission changes, and errors.</li>
+          <li>Use structured formats (JSON) for searching.</li>
+        </ul>
+        <div class="example-box">
+          <span class="example-label">Practical Example</span>
+          <p class="example-text">Log <code>{ "event": "user_login", "status": "failed", "user_id": 123 }</code> to
+            CloudWatch or ELK.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-content">
+        <h2><span>12</span> Logging: Privacy</h2>
+        <ul>
+          <li>Never log PHI, passwords, or secrets.</li>
+          <li>Scrub sensitive fields at the application level.</li>
+        </ul>
+        <div class="alert-tag danger">Don't log full request bodies containing PII.</div>
+        <div class="example-box">
+          <span class="example-label">Practical Example</span>
+          <p class="example-text">If a user updates their profile, log
+            <code>"fields_updated": ["email", "address"]</code> but not the actual values.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-content">
+        <h2><span>13</span> Vulnerability Patching</h2>
+        <ul>
+          <li>Fix High/Critical issues within 30 days.</li>
+          <li>Participate in regular Pen Tests.</li>
+        </ul>
+        <div class="example-box">
+          <span class="example-label">Practical Example</span>
+          <p class="example-text">If Snyk or GitHub Advanced Security flags a SQL Injection risk, prioritize the fix in
+            the current sprint.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-content">
+        <h2><span>14</span> Data Classification</h2>
+        <ul>
+          <li>Internal: Default company info.</li>
+          <li>Confidential: Customer data / PHI.</li>
+        </ul>
+        <div class="example-box">
+          <span class="example-label">Practical Example</span>
+          <p class="example-text">A list of internal team birthdays is 'Internal'. A patient's medical history is
+            'Confidential/Restricted'.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-content">
+        <h2><span>15</span> Data Retention</h2>
+        <ul>
+          <li>Delete or archive data per policy.</li>
+          <li>Don't keep logs or backups forever.</li>
+        </ul>
+        <div class="alert-tag success">Follow the 'Clean Desk & Clean Drive' policy.</div>
+        <div class="example-box">
+          <span class="example-label">Practical Example</span>
+          <p class="example-text">Set an S3 Lifecycle Policy to automatically move logs older than 1 year to Glacier or
+            delete them.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-content">
+        <h2><span>16</span> Public Wi-Fi / VPN</h2>
+        <ul>
+          <li>Use the company VPN on untrusted networks.</li>
+          <li>Public Wi-Fi (Cafes/Airports) is high risk.</li>
+        </ul>
+        <div class="example-box">
+          <span class="example-label">Practical Example</span>
+          <p class="example-text">If working from Starbucks, connect to the Mindbowser VPN before accessing Epico or
+            HROne.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-content">
+        <h2><span>17</span> Approved Comms</h2>
+        <ul>
+          <li>Official data stays on official tools.</li>
+          <li>No customer data on personal WhatsApp/Gmail.</li>
+        </ul>
+        <div class="example-box">
+          <span class="example-label">Practical Example</span>
+          <p class="example-text">Send project files via Epico or Google Drive links, never as attachments in a personal
+            Telegram chat.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-content">
+        <h2><span>18</span> Incident: Phishing</h2>
+        <ul>
+          <li>Be cautious with links & attachments.</li>
+          <li>Check the sender's actual email address.</li>
+        </ul>
+        <div class="alert-tag danger">Don't click: "Urgent: Your password expired."</div>
+        <div class="example-box">
+          <span class="example-label">Practical Example</span>
+          <p class="example-text">Hover over a link to see the real URL. If it says 'google-login.ru' instead of
+            'google.com', do not click.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-content">
+        <h2><span>19</span> Reporting Incidents</h2>
+        <ul>
+          <li>Use the official security mailbox/hotline.</li>
+          <li>Report immediately; time is critical.</li>
+        </ul>
+        <div class="example-box">
+          <span class="example-label">Practical Example</span>
+          <p class="example-text">Sent an email with sensitive data to the wrong person? Don't delete it; inform
+            IT/Security so they can track the breach.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-content">
+        <h2><span>20</span> AI: Approved Tools</h2>
+        <ul>
+          <li>Use only company-vetted AI solutions.</li>
+          <li>Treat AI output as a draft, never as final.</li>
+        </ul>
+        <div class="alert-tag success">Check the internal AI Usage Policy.</div>
+        <div class="example-box">
+          <span class="example-label">Practical Example</span>
+          <p class="example-text">Use ChatGPT for brainstorming a function name, but never for processing a real list of
+            patient names.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-content">
+        <h2><span>21</span> AI: Data Masking</h2>
+        <ul>
+          <li>Replace real data with generic placeholders.</li>
+          <li>Describe logic abstractly to the AI.</li>
+        </ul>
+        <div class="example-box">
+          <span class="example-label">Practical Example</span>
+          <p class="example-text">Instead of: "Find the error in this patient record for Jane Doe...", Use: "Find the
+            logic error in this JSON object with a string field..."</p>
+        </div>
+      </div>
+    </div>
+
+  
+
+    <div class="slide">
+      <div class="slide-content">
+        <h2 style="font-size: 2.5rem;">Stay Compliant.</h2>
+        <ul style="font-size: 1.3rem;">
+          <li>Security is a continuous habit.</li>
+          <li>Your vigilance protects our customers.</li>
+          <li>When in doubt: <b>Ask before you act.</b></li>
+        </ul>
+        <p style="margin-top: 30px; font-weight: 800; font-size: 1.5rem; color: var(--accent-amber);">Build Fast. Stay
+          Safe.</p>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <button class="btn" id="prev" onclick="changeSlide(-1)">Back</button>
+    <div class="progress-rail">
+      <div id="progress-fill"></div>
+    </div>
+    <div style="font-family: 'JetBrains Mono'; font-weight: 800;"><span id="curr">1</span> / 23</div>
+    <button class="btn" id="next" onclick="changeSlide(1)">Next</button>
+  </footer>
+
+  <script>
+    let currentIdx = 0;
+    const slides = document.querySelectorAll('.slide');
+    const total = slides.length;
+
+    function changeSlide(dir) {
+      currentIdx += dir;
+      if (currentIdx < 0) currentIdx = 0;
+      if (currentIdx >= total) currentIdx = total - 1;
+      updateUI();
+    }
+
+    function updateUI() {
+      slides.forEach((s, i) => s.classList.toggle('active', i === currentIdx));
+      document.getElementById('curr').innerText = currentIdx + 1;
+      document.getElementById('prev').disabled = currentIdx === 0;
+      document.getElementById('next').disabled = currentIdx === total - 1;
+      document.getElementById('progress-fill').style.width = ((currentIdx + 1) / total * 100) + '%';
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === "ArrowRight") changeSlide(1);
+      if (e.key === "ArrowLeft") changeSlide(-1);
+    });
+
+    updateUI();
+  </script>
+
+</body>
+
+</html>

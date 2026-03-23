@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SOC 2 Developer Security Checklist</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=JetBrains+Mono&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg-page: #fafafa;
+      --bg-slide: #ffffff;
+      --text-bold: #1c1917;
+      --text-body: #44403c;
+      --accent-amber: #f59e0b;
+      --accent-soft: #fffbeb;
+      --danger: #ef4444;
+      --success: #10b981;
+      --border: #e7e5e4;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: var(--bg-page);
+      color: var(--text-body);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* --- Header with SVG Logo --- */
+    header {
+      background: var(--bg-slide);
+      height: 80px;
+      padding: 0 50px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 2px solid var(--border);
+    }
+
+    .logo-section {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-svg {
+      width: 140px;
+      height: auto;
+    }
+
+    .session-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      background: var(--accent-soft);
+      color: var(--accent-amber);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-weight: 700;
+      border: 1px solid var(--accent-amber);
+    }
+
+    /* --- Presentation Deck --- */
+    #deck {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+    }
+
+    .slide {
+      display: none;
+      width: 100%;
+      max-width: 1150px;
+      height: 640px;
+      background: var(--bg-slide);
+      border-radius: 28px;
+      box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.08);
+      border: 1px solid var(--border);
+      padding: 60px;
+      animation: slideIn 0.5s ease;
+    }
+
+    .slide.active {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .content-left {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    h1 {
+      font-size: 3.8rem;
+      font-weight: 800;
+      color: var(--text-bold);
+      line-height: 1.1;
+      margin-bottom: 25px;
+    }
+
+    h2 {
+      font-size: 2.2rem;
+      color: var(--text-bold);
+      margin-bottom: 25px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    h2 span {
+      color: var(--accent-amber);
+      font-family: 'JetBrains Mono';
+      font-size: 1.5rem;
+      border: 2px solid var(--accent-amber);
+      padding: 2px 10px;
+      border-radius: 8px;
+    }
+
+    ul {
+      list-style: none;
+      margin-bottom: 20px;
+    }
+
+    li {
+      margin-bottom: 18px;
+      font-size: 1.1rem;
+      line-height: 1.5;
+      padding-left: 30px;
+      position: relative;
+    }
+
+    li::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: var(--accent-amber);
+      font-size: 2rem;
+      line-height: 0.8;
+    }
+
+    .alert-tag {
+      padding: 18px;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      margin-top: 15px;
+      font-weight: 600;
+    }
+
+    .danger {
+      background: #fef2f2;
+      color: #991b1b;
+      border-left: 4px solid var(--danger);
+    }
+
+    .success {
+      background: #f0fdf4;
+      color: #166534;
+      border-left: 4px solid var(--success);
+    }
+
+    /* --- Right Side: High Fidelity Graphics --- */
+    .content-right {
+      background: #fffdfa;
+      border-radius: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #fdf4e3;
+    }
+
+    .graphic-container {
+      width: 85%;
+    }
+
+    /* --- Footer Navigation --- */
+    footer {
+      height: 100px;
+      background: var(--bg-slide);
+      padding: 0 50px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid var(--border);
+    }
+
+    .btn {
+      background: var(--text-bold);
+      color: white;
+      border: none;
+      padding: 14px 35px;
+      border-radius: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn:hover:not(:disabled) {
+      background: var(--accent-amber);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(245, 158, 11, 0.2);
+    }
+
+    .btn:disabled {
+      opacity: 0.2;
+      cursor: not-allowed;
+    }
+
+    .progress-rail {
+      flex: 0.4;
+      height: 6px;
+      background: var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    #progress-fill {
+      height: 100%;
+      background: var(--accent-amber);
+      width: 0%;
+      transition: width 0.4s;
+    }
+
+    .page-num {
+      font-family: 'JetBrains Mono';
+      font-weight: 800;
+      color: var(--text-body);
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div class="logo-section">
+     <img src="./logo-colour.png" alt="MB" width="160"/>
+    </div>
+    <div class="session-tag">SOC 2 / DEVELOPER CHECKLIST</div>
+  </header>
+
+  <div id="deck">
+    <div class="slide active">
+      <div class="content-left">
+        <h1 style="font-size: 4.5rem;">SOC 2</h1>
+        <p style="font-size: 1.4rem; color: var(--text-body); margin-top: 10px;">
+          Technical Training for Developers
+        </p>
+      </div>
+      <div class="content-right">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" class="graphic-container">
+          <circle cx="100" cy="100" r="90" fill="#fef3c7" opacity="0.5" />
+          <path d="M100 40 L150 60 V100 C150 140 100 160 100 160 C100 160 50 140 50 100 V60 L100 40Z" fill="#f59e0b" />
+          <circle cx="100" cy="100" r="30" fill="white" opacity="0.2" />
+          <path d="M85 100 L95 110 L120 85" stroke="white" stroke-width="8" fill="none" stroke-linecap="round" />
+        </svg>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="content-left">
+        <h2><span>01</span> Secure Development</h2>
+        <ul>
+          <li>Validate all inputs and encode outputs.</li>
+          <li>Mandatory peer reviews for every PR.</li>
+          <li>Keep third-party libraries updated.</li>
+        </ul>
+        <div class="alert-tag danger">Never hard-code passwords or API keys in code.</div>
+        <div class="alert-tag success">Do: Use Vault and inject via Environment Variables.</div>
+      </div>
+      <div class="content-right">
+        <svg viewBox="0 0 240 180" xmlns="http://www.w3.org/2000/svg" class="graphic-container">
+          <rect x="10" y="10" width="220" height="140" rx="12" fill="#1c1917" />
+          <circle cx="30" cy="25" r="4" fill="#ef4444" />
+          <circle cx="45" cy="25" r="4" fill="#f59e0b" />
+          <circle cx="60" cy="25" r="4" fill="#10b981" />
+          <rect x="25" y="50" width="100" height="6" rx="3" fill="#38bdf8" opacity="0.8" />
+          <rect x="25" y="65" width="150" height="6" rx="3" fill="#818cf8" opacity="0.8" />
+          <rect x="25" y="80" width="80" height="6" rx="3" fill="#f472b6" opacity="0.8" />
+          <rect x="40" y="95" width="120" height="6" rx="3" fill="#fb923c" opacity="0.8" />
+          <rect x="130" y="60" width="80" height="100" rx="10" fill="#f59e0b" opacity="0.1" />
+          <path d="M170 80 L195 90 V120 C195 140 170 155 170 155 C170 155 145 140 145 120 V90 L170 80Z" fill="#f59e0b"
+            stroke="#ffffff" stroke-width="4" />
+          <path d="M162 120 L168 126 L180 114" stroke="white" stroke-width="5" fill="none" stroke-linecap="round" />
+        </svg>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="content-left">
+        <h2><span>02</span> Environment Access</h2>
+        <ul>
+          <li>Isolate Dev, Stage, and Prod environments.</li>
+          <li>Production requires SSO + MFA (No exceptions).</li>
+          <li>Audit every action with a Ticket ID.</li>
+        </ul>
+        <div class="alert-tag danger">No manual "quick-fix" DB edits in Prod.</div>
+      </div>
+      <div class="content-right">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" class="graphic-container">
+          <rect x="60" y="80" width="80" height="60" rx="10" fill="#f59e0b" />
+          <path d="M75 80 V50 C75 30 125 30 125 50 V80" stroke="#f59e0b" stroke-width="15" fill="none" />
+          <circle cx="100" cy="110" r="10" fill="white" />
+        </svg>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="content-left">
+        <h2><span>03</span> Data Protection</h2>
+        <ul>
+          <li>Practice Data Minimization (Collect only essentials).</li>
+          <li>Classify and protect sensitive fields (PHI/PII).</li>
+          <li>Automate retention & deletion policies.</li>
+        </ul>
+        <div class="alert-tag success">Do: Use generic error messages for end-users.</div>
+      </div>
+      <div class="content-right">
+        <svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <!-- Shield Background -->
+          <path d="M100 20 L160 40 L160 90 Q160 140 100 180 Q40 140 40 90 L40 40 Z" fill="#f59e0b" stroke="#d97706"
+            stroke-width="3" />
+        
+          <!-- Shield Highlight -->
+          <path d="M100 20 L160 40 L160 90 Q160 120 140 145" fill="none" stroke="#fbbf24" stroke-width="2" opacity="0.5" />
+        
+          <!-- Document/Data Icon -->
+          <rect x="70" y="70" width="60" height="70" rx="4" fill="#FFFFFF" stroke="#1c1917" stroke-width="2" />
+        
+          <!-- Document Lines -->
+          <line x1="80" y1="85" x2="120" y2="85" stroke="#f59e0b" stroke-width="2" />
+          <line x1="80" y1="95" x2="120" y2="95" stroke="#f59e0b" stroke-width="2" />
+          <line x1="80" y1="105" x2="110" y2="105" stroke="#f59e0b" stroke-width="2" />
+        
+          <!-- Lock Body -->
+          <rect x="85" y="115" width="30" height="20" rx="2" fill="#1c1917" stroke="#0a0a0a" stroke-width="1.5" />
+        
+          <!-- Lock Shackle -->
+          <path d="M90 115 L90 108 Q90 100 100 100 Q110 100 110 108 L110 115" fill="none" stroke="#1c1917" stroke-width="3"
+            stroke-linecap="round" />
+        
+          <!-- Keyhole -->
+          <circle cx="100" cy="122" r="3" fill="#f59e0b" />
+          <rect x="98.5" y="124" width="3" height="6" rx="1" fill="#f59e0b" />
+        
+          <!-- Check Mark (Security Approved) -->
+          <circle cx="145" cy="55" r="15" fill="#10b981" stroke="#059669" stroke-width="2" />
+          <path d="M138 55 L143 60 L152 50" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"
+            stroke-linejoin="round" />
+        </svg>
+        
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="content-left">
+        <h2><span>04</span> Monitoring & Audit</h2>
+        <ul>
+          <li>Log security events, permissions, and failures.</li>
+          <li>Scrub passwords & secrets from all logs.</li>
+          <li>Alert on critical security patterns.</li>
+        </ul>
+        <div class="alert-tag danger">Don't reduce logging to "save time."</div>
+      </div>
+      <div class="content-right">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" class="graphic-container">
+          <path d="M30 100 Q100 20 170 100 Q100 180 30 100 Z" fill="#f59e0b" opacity="0.2" />
+          <circle cx="100" cy="100" r="40" fill="#1c1917" />
+          <circle cx="100" cy="100" r="15" fill="#f59e0b" />
+          <circle cx="110" cy="90" r="5" fill="white" />
+        </svg>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="content-left">
+        <h2>Final Summary</h2>
+        <ul>
+          <li>AI is a draft tool; you are the authority.</li>
+          <li>Never share production data with public AI.</li>
+          <li>Review AI code for logic and security leaks.</li>
+        </ul>
+        <p style="margin-top: 30px; font-weight: 800; font-size: 2rem; color: var(--accent-amber);">
+          Build Fast. Stay Safe.
+        </p>
+      </div>
+      <div class="content-right">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" class="graphic-container">
+          <circle cx="100" cy="100" r="80" fill="#f0fdf4" />
+          <path d="M60 100 L90 130 L150 70" stroke="#10b981" stroke-width="20" fill="none" stroke-linecap="round" />
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="nav-group">
+      <button class="btn" id="prev" onclick="changeSlide(-1)">Previous</button>
+      <button class="btn" id="next" onclick="changeSlide(1)">Next</button>
+    </div>
+    <div class="progress-rail">
+      <div id="progress-fill"></div>
+    </div>
+    <div class="page-num"><span id="curr">1</span> / 6</div>
+  </footer>
+
+  <script>
+    let currentIdx = 0;
+    const slides = document.querySelectorAll('.slide');
+    const total = slides.length;
+
+    function changeSlide(dir) {
+      currentIdx += dir;
+      if (currentIdx < 0) currentIdx = 0;
+      if (currentIdx >= total) currentIdx = total - 1;
+      updateUI();
+    }
+
+    function updateUI() {
+      slides.forEach((s, i) => s.classList.toggle('active', i === currentIdx));
+      document.getElementById('curr').innerText = currentIdx + 1;
+      document.getElementById('prev').disabled = currentIdx === 0;
+      document.getElementById('next').disabled = currentIdx === total - 1;
+      document.getElementById('progress-fill').style.width = ((currentIdx + 1) / total * 100) + '%';
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === "ArrowRight") changeSlide(1);
+      if (e.key === "ArrowLeft") changeSlide(-1);
+    });
+
+    updateUI();
+  </script>
+
+</body>
+
+</html>
