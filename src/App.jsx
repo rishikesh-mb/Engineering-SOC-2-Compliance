@@ -621,7 +621,6 @@ export default function App() {
                   </div>
                   <div>
                     <h3 style={{ fontSize: '22px', fontWeight: '700', color: '#fff', margin: 0 }}>Secure Engineering</h3>
-                    <div style={{ fontSize: '12px', color: '#2DC9A0', fontWeight: '600', letterSpacing: '0.5px' }}>AVAILABLE NOW</div>
                   </div>
                </div>
                
